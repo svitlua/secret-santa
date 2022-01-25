@@ -1,9 +1,9 @@
 const express = require("express");
-const { add } = require("lodash");
-const sequelize = require("./database");
+const sequelize = require("./db/database");
 const Santas = require("./models/Santas");
 const User = require("./models/User");
 const Wishes = require("./models/Wishes");
+const { shuffleUsers } = require("./utils/functions");
 
 sequelize
   .sync({ force: true })
@@ -64,25 +64,9 @@ app.post("/shuffle", async (req, res) => {
       attributes: ["id"],
       raw: true,
     });
-
     const formattedUserIds = userIds.map((idObj) => idObj.id);
-
-    const getShuffledUsers = (userIds) => {
-      const shuffledUserIds = userIds.sort((a, b) => 0.5 - Math.random());
-      return shuffledUserIds.map((userId, index) => {
-        const santaId =
-          index === shuffledUserIds.length - 1
-            ? shuffledUserIds[0]
-            : shuffledUserIds[index + 1];
-        return { userId, santaId };
-      });
-    };
-
-    const shuffledUsers = getShuffledUsers(formattedUserIds);
-    console.log(shuffledUsers);
-
+    const shuffledUsers = shuffleUsers(formattedUserIds);
     await Santas.bulkCreate(shuffledUsers);
-
     res.send("Users shuffled");
   } catch (err) {
     console.log(err);
