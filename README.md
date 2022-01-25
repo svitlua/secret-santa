@@ -13,5 +13,5 @@ $ npm run start
 
 ### The app runs on port 9000
 ```bash
-POST http://localhost:9000
+http://localhost:9000
 ```
