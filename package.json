@@ -25,6 +25,7 @@
   "homepage": "https://github.com/svitlua/secret-santa#readme",
   "dependencies": {
     "express": "^4.17.2",
+    "express-validator": "^6.14.0",
     "sequelize": "^6.14.0",
     "sqlite3": "^5.0.2"
   },

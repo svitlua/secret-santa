@@ -1,9 +1,13 @@
 const express = require("express");
+const { validationResult } = require("express-validator");
+const { addUserValidation } = require("./utils/validation");
+
 const sequelize = require("./db/database");
 const Santas = require("./models/Santas");
 const User = require("./models/User");
 const Wishes = require("./models/Wishes");
 const { shuffleUsers } = require("./utils/functions");
+const { MIN_USERS_NUMBER, MAX_USERS_NUMBER } = require("./utils/constants");
 
 sequelize
   .sync({ force: true })
@@ -16,8 +20,13 @@ const app = express();
 
 app.use(express.json());
 
-app.post("/users", async (req, res) => {
+app.post("/users", addUserValidation, async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json(errors);
+    }
+
     const { firstname, lastname, wishes } = req.body;
     const wishesArr = wishes.map((wish) => ({ wish: wish }));
     await User.create(
@@ -64,10 +73,15 @@ app.post("/shuffle", async (req, res) => {
       attributes: ["id"],
       raw: true,
     });
-    const formattedUserIds = userIds.map((idObj) => idObj.id);
-    const shuffledUsers = shuffleUsers(formattedUserIds);
-    await Santas.bulkCreate(shuffledUsers);
-    res.send("Users shuffled");
+      if (userIds.length < MIN_USERS_NUMBER || userIds.length > MAX_USERS_NUMBER) {
+          const errorMessage = `To shuffle secret santas you need to have ${MIN_USERS_NUMBER} to ${MAX_USERS_NUMBER} users`;
+          return res.status(403).json({ message: errorMessage })
+      } else {
+          const formattedUserIds = userIds.map((idObj) => idObj.id);
+          const shuffledUsers = shuffleUsers(formattedUserIds);
+          await Santas.bulkCreate(shuffledUsers);
+          res.send("Users shuffled");
+      }
   } catch (err) {
     console.log(err);
   }
