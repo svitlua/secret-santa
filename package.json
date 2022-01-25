@@ -1,0 +1,34 @@
+{
+  "name": "secret-santa",
+  "version": "1.0.0",
+  "description": "NodeJs and SQLite secret-santa app",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/svitlua/secret-santa.git"
+  },
+  "keywords": [
+    "secret-santa",
+    "yalantis",
+    "nodejs",
+    "sqlite"
+  ],
+  "author": "Svitlana Shymko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/svitlua/secret-santa/issues"
+  },
+  "homepage": "https://github.com/svitlua/secret-santa#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "sequelize": "^6.14.0",
+    "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
