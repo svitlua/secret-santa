@@ -67,7 +67,7 @@ app.get("/users/:id", async (req, res) => {
   }
 });
 
-app.post("/shuffle", async (req, res) => {
+app.post("/users/shuffle", async (req, res) => {
   try {
     const userIds = await User.findAll({
       attributes: ["id"],
